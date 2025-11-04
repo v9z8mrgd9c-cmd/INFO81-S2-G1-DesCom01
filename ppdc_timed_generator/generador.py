@@ -25,10 +25,18 @@ class Cliente:
 
 
 class Generador:
-    def __init__(self, hora_inicio: dt.time, hora_final: dt.time):
+    def __init__(
+        self,
+        seed=123,
+        fecha_inicial: dt.datetime = dt.datetime(2025, 1, 1),
+        hora_apertura: dt.time = dt.time(7, 0),
+        hora_cierre: dt.time = dt.time(20, 0),
+    ):
         ...
         ...
-        self.rdm = random.Random(123)
+        self.seed = seed
+        self.current_datetime: dt.datetime = fecha_inicial
+        self.rdm = random.Random(seed)
 
     def generar_clientes(self, minutos: int):
         size = int(minutos * CPM)
@@ -38,7 +46,9 @@ class Generador:
 class Estacion:
     def __init__(self, nombre: str, hora_inicio: dt.time, hora_final: dt.time):
         self.nombre = nombre
-        self.generador = Generador(hora_inicio, hora_final)
+        self.generador = Generador(
+            123, dt.datetime.now(), hora_inicio, hora_final
+        )
 
 
 if __name__ == "__main__":
