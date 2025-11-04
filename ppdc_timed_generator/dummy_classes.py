@@ -2,7 +2,7 @@ import datetime as dt
 import random
 from collections.abc import Callable
 
-from generador import Generador
+from generador_uniforme import GeneradorUniforme
 
 ESTADO = dict()
 ESTADO["estaciones"] = ["Estacion A", "Estacion B", "Estacion C"]
@@ -28,7 +28,7 @@ class Estacion:
     ):
         self.nombre = nombre
         self.poblacion = poblacion
-        self.generador = Generador(
+        self.generador = GeneradorUniforme(
             poblacion, 123, dt.datetime.now(), hora_inicio, hora_final
         )
         self.clientes = []
