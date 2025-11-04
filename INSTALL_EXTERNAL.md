@@ -2,7 +2,7 @@
 cd my-simulation-project/
 
 # 2. Añade el repositorio como un submódulo.
-git submodule add https://github.com/REPOREPOREPO.git ppdc-timed-generator
+git submodule add https://github.com/Santasy/INFO81-S2-G1-DesCom01.git ppdc-timed-generator
 
 # 3. Inicia y hace update
 git submodule init

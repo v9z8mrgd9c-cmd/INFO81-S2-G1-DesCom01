@@ -1,64 +1,44 @@
 import datetime as dt
 import random
-# La versión uniforme:
-# P: Población
-# Cpm:    P * 0.2 / MINUTOS
-
-POBLACION = 100_000
-
-HORAS = dt.time(20, 0).hour - dt.time(7, 0).hour
-MINUTOS = HORAS * 60
-print(MINUTOS)
-
-CPM = POBLACION * 0.2 / MINUTOS
-
-
-class Cliente:
-    def __init__(self, hora_creacion: dt.datetime):
-        self.hora_creacion = hora_creacion
-        self.destino = ...
-        self.origen = ...
-        self.delay = ...  # Cuándo vuelve.
-        self.id = ...
-        self.nombre = ...
-        self.edad = ...
+from collections.abc import Callable
 
 
 class Generador:
     def __init__(
         self,
+        poblacion: int,
         seed=123,
         fecha_inicial: dt.datetime = dt.datetime(2025, 1, 1),
         hora_apertura: dt.time = dt.time(7, 0),
         hora_cierre: dt.time = dt.time(20, 0),
     ):
-        ...
-        ...
+        self.poblacion = poblacion
         self.seed = seed
-        self.current_datetime: dt.datetime = fecha_inicial
         self.rdm = random.Random(seed)
 
-    def generar_clientes(self, minutos: int):
-        size = int(minutos * CPM)
-        return [Cliente(dt.datetime.now())] * size
+        self.hora_apertura = hora_apertura
+        self.hora_cierre = hora_cierre
 
+        self.current_datetime: dt.datetime = fecha_inicial
 
-class Estacion:
-    def __init__(self, nombre: str, hora_inicio: dt.time, hora_final: dt.time):
-        self.nombre = nombre
-        self.generador = Generador(
-            123, dt.datetime.now(), hora_inicio, hora_final
-        )
+    def minutos_de_funcionamiento(self):
+        horas = self.hora_cierre.hour - self.hora_apertura.hour
+        return horas * 60
 
+    def generar_clientes(
+        self,
+        minutos: int,
+        constructor: Callable[[int, dt.datetime], any],
+        update: bool = True,
+    ):
+        if update:
+            self.current_datetime += dt.timedelta(minutes=minutos)
 
-if __name__ == "__main__":
-    estacion1 = Estacion("Ferroviario Valdivia", dt.time(7, 0), dt.time(20, 0))
-    generador = estacion1.generador
-    res = generador.generar_clientes(10)
-    print("Clientes:", len(res))
-
-    res = generador.generar_clientes(MINUTOS)
-    print("Min:", POBLACION * 0.19)
-    print("Clientes:", len(res))
-    print("Max:", POBLACION * 0.21)
-    assert POBLACION * 0.19 <= len(res) <= POBLACION * 0.21
+        cpm = self.poblacion * 0.2 / self.minutos_de_funcionamiento()
+        size = int(minutos * cpm)
+        clientes = []
+        for _ in range(size):
+            val = self.rdm.randint(0, 2_000_000)
+            cliente = constructor(val, self.current_datetime)
+            clientes.append(cliente)
+        return clientes
