@@ -1,16 +1,16 @@
 import datetime as dt
 import random
 from collections.abc import Callable
+from typing import Any
 
-from ..generador import Generador
+from ppdc_timed_generator.generador import Generador
 
 
 class GeneradorUniforme(Generador):
-    # Aquí definimos la clase abstracta que necesitabamos.
     def generar_clientes(
         self,
         minutos: int,
-        constructor: Callable[[int, dt.datetime], any],
+        constructor: Callable[[int, dt.datetime], Any],
         update: bool = True,
     ):
         if update:

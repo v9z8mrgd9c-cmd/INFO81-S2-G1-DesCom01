@@ -1,7 +1,7 @@
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __license__ = "MIT"
 from .generador import Generador
-from .generadores.generador_uniforme import GeneradorUniforme
+from .generadores import GeneradorUniforme
 
 # Define public API
 __all__ = [
